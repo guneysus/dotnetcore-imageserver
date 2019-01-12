@@ -12,7 +12,7 @@ namespace ImageServer.Services
 {
     public class Resizer : IResizer
     {
-        private readonly IImageEncoder _encoder;
+        private readonly IImageEncoder _defaultEncoder;
 
         private readonly IHostingEnvironment _hosting;
         private readonly IUploader _uploader;
@@ -22,15 +22,21 @@ namespace ImageServer.Services
             _hosting = hosting;
             _uploader = uploader;
 
-            this._encoder = new JpegEncoder()
+            this._defaultEncoder = EncoderFactory(95);
+        }
+
+
+        private IImageEncoder EncoderFactory(int quality)
+        {
+            return new JpegEncoder()
             {
-                Quality = 95,
+                Quality = quality,
                 Subsample = JpegSubsample.Ratio444,
                 IgnoreMetadata = true
             };
         }
 
-        void IResizer.ResizeFixedHeight(string name, int height, Stream stream)
+        void IResizer.ResizeFixedHeight(string name, int height, Stream stream, int quality)
         {
             height = height > 0 ? height : 0;
 
@@ -47,12 +53,12 @@ namespace ImageServer.Services
                     image.Mutate(x => x.Resize(width, height));
                 }
 
-                image.Save(stream, encoder: this._encoder);
+                image.Save(stream, encoder: EncoderFactory(quality));
                 stream.Position = 0;
             }
         }
 
-        void IResizer.ResizeFixedWidth(string name, int width, Stream stream)
+        void IResizer.ResizeFixedWidth(string name, int width, Stream stream, int quality)
         {
             width = width > 0 ? width : 0;
 
@@ -69,7 +75,7 @@ namespace ImageServer.Services
                     image.Mutate(x => x.Resize(width, height));
                 }
 
-                image.Save(stream, encoder: this._encoder);
+                image.Save(stream, encoder: EncoderFactory(quality));
                 stream.Position = 0;
             }
         }
