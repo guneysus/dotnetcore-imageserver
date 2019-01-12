@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using System.Linq;
 
 namespace ImageServer.Services
 {
@@ -35,9 +36,32 @@ namespace ImageServer.Services
             return filename;
         }
 
-        Task<IList<string>> IUploader.UploadMany(IList<IFormFile> images)
+        async Task<IList<string>> IUploader.UploadMany(IList<IFormFile> images)
         {
-            throw new NotImplementedException();
+            IList<string> result = new List<string>();
+
+            if (images == null)
+                throw new ArgumentNullException(nameof(images));
+
+            if (!images.Any())
+                return result;
+
+            foreach (var image in images)
+            {
+                if (image.Length == 0)
+                    continue;
+
+                var filename = Guid.NewGuid().ToString().ToLower() + Path.GetExtension(image.FileName);
+
+                var fullpath = Path.Combine(_hosting.WebRootPath, filename);
+
+                using (var stream = new FileStream(fullpath, FileMode.Create))
+                    await image.CopyToAsync(stream);
+
+                result.Add(filename);
+            }
+
+            return result;
         }
     }
 }
