@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using ImageServer.Contracts;
+using ImageServer.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,7 @@ namespace ImageServer
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("hosting.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -25,13 +28,14 @@ namespace ImageServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             // Add framework services.
             services.AddMvc();
 
-            SixLabors.ImageSharp.Configuration.Default.MemoryManager = SixLabors.ImageSharp.Memory.ArrayPoolMemoryManager.CreateWithMinimalPooling();
-            //SixLabors.ImageSharp.Configuration.Default.MemoryManager = SixLabors.ImageSharp.Memory.ArrayPoolMemoryManager.CreateWithModeratePooling();
-            //SixLabors.ImageSharp.Configuration.Default.MemoryManager = SixLabors.ImageSharp.Memory.ArrayPoolMemoryManager.CreateWithAggressivePooling();
-            //SixLabors.ImageSharp.Configuration.Default.MemoryManager = SixLabors.ImageSharp.Memory.ArrayPoolMemoryManager.CreateDefault();
+            SixLabors.ImageSharp.Configuration.Default.MemoryManager = SixLabors.ImageSharp.Memory.ArrayPoolMemoryManager.CreateDefault();
+
+            services.AddTransient<IUploader, LocalUploader>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
