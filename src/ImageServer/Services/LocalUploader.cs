@@ -20,48 +20,72 @@ namespace ImageServer.Services
 
         async Task<string> IUploader.Upload(IFormFile image)
         {
+            ValidateOrThrowException(image);
+
+            var filename = GetFilename(image);
+
+            var fullpath = GetFullpath(filename);
+
+            await CopyTo(image, fullpath);
+
+            return filename;
+        }
+
+        private static void ValidateOrThrowException(IFormFile image)
+        {
             if (image == null)
                 throw new ArgumentNullException(nameof(image));
 
             if (image.Length == 0)
                 throw new ArgumentOutOfRangeException(nameof(image));
-
-            var filename = Guid.NewGuid().ToString().ToLower() + Path.GetExtension(image.FileName);
-
-            var fullpath = Path.Combine(_hosting.WebRootPath, filename);
-
-            using (var stream = new FileStream(fullpath, FileMode.Create))
-                await image.CopyToAsync(stream);
-
-            return filename;
         }
 
-        async Task<IList<string>> IUploader.UploadMany(IList<IFormFile> images)
+        private static void ValidateOrThrowException(IList<IFormFile> images)
         {
-            IList<string> result = new List<string>();
-
             if (images == null)
                 throw new ArgumentNullException(nameof(images));
 
             if (!images.Any())
-                return result;
+                throw new ArgumentOutOfRangeException(nameof(images));
+        }
+
+        async Task<IList<string>> IUploader.UploadMany(IList<IFormFile> images)
+        {
+            ValidateOrThrowException(images);
+
+            IList<string> result = new List<string>();
 
             foreach (var image in images)
             {
                 if (image.Length == 0)
                     continue;
 
-                var filename = Guid.NewGuid().ToString().ToLower() + Path.GetExtension(image.FileName);
+                var filename = GetFilename(image);
 
-                var fullpath = Path.Combine(_hosting.WebRootPath, filename);
+                var fullpath = GetFullpath(filename);
 
-                using (var stream = new FileStream(fullpath, FileMode.Create))
-                    await image.CopyToAsync(stream);
+                await CopyTo(image, fullpath);
 
                 result.Add(filename);
             }
 
             return result;
+        }
+
+        private static async Task CopyTo(IFormFile image, string fullpath)
+        {
+            using (var stream = new FileStream(fullpath, FileMode.Create))
+                await image.CopyToAsync(stream);
+        }
+
+        private string GetFullpath(string filename)
+        {
+            return Path.Combine(_hosting.WebRootPath, filename);
+        }
+
+        private static string GetFilename(IFormFile image)
+        {
+            return (Guid.NewGuid().ToString() + Path.GetExtension(image.FileName)).ToLower();
         }
     }
 }
