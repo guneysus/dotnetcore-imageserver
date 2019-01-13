@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore:1.1.10-jessie
+FROM microsoft/dotnet:1.1-runtime-jessie
 
 ADD ImageServer/bin/Debug/netcoreapp1.1/debian.8-x64/publish/ app
 WORKDIR /app

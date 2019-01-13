@@ -1,11 +1,17 @@
 .DEFAULT_GOAL := help
 PROJECT=ImageServer
 
-PUBLISH = dotnet publish $(PROJECT)
+PUBLISH = dotnet publish /p:TrimUnusedDependencies=false $(PROJECT)
 DEBUG_FLAGS = -c Debug
 
 RUNTIMES = win10-x64 win81-x64 win8-x64 win7-x64 osx.10.11-x64 ubuntu.16.04-x64 ubuntu.18.04-x64 debian.8-x64
 
+DOCKER_REPO_VERSION = 1.1.10-runtime-deps-stretch
+DOCKER_REPO_NAME 	= guneysu/dotnetcore-imageserver
+DOCKER_REPO 		= $(DOCKER_REPO_NAME):$(DOCKER_REPO_VERSION)
+
+ECS_REPO_NAME		= 023038164406.dkr.ecr.us-east-1.amazonaws.com/dotnetcore-imageserver
+ECS_REPO 			= $(ECS_REPO_NAME):$(DOCKER_REPO_VERSION)
 
 .PHONY: help
 help:  ## Prints help
@@ -20,3 +26,16 @@ $(RUNTIMES):
 .PHONY: publish
 up:	## Start project with docker compose
 	docker-compose up --build
+
+
+
+.PHONY: docker-build
+docker-build: ## Builds docker container
+	docker build -t $(DOCKER_REPO) .
+	docker tag $(DOCKER_REPO) $(ECS_REPO)
+
+
+.PHONY: docker-push
+docker-push: ## Pushs docker container to docker hub
+	docker push $(DOCKER_REPO)
+	docker push $(ECS_REPO)
