@@ -1,11 +1,9 @@
-# FROM microsoft/dotnet:1.1-runtime-jessie
-# FROM microsoft/aspnetcore:1.1
-FROM microsoft/aspnetcore:1.1-nanoserver
+FROM microsoft/aspnetcore:1.1.10-jessie
 
-ADD dist app
+ADD ImageServer/bin/Debug/netcoreapp1.1/debian.8-x64/publish/ app
 WORKDIR /app
 ENV ASPNETCORE_ENVIRONMENT Development
 ENV ASPNETCORE_URLS http://+:5000
-CMD ["ImageServer.exe"]
+CMD ["dotnet", "ImageServer.dll"]
 
 
