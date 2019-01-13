@@ -1,0 +1,1 @@
+dotnet publish  .\ImageServer\ -c Release -o "dist-ubuntu/" --runtime ubuntu.16.04-x64
