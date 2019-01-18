@@ -4,3 +4,4 @@
 
 *.suo
 /src/ImageServer/Properties/PublishProfiles
+.vscode/
