@@ -6,7 +6,7 @@ DEBUG_FLAGS = -c Debug
 
 RUNTIMES = win10-x64 win81-x64 win8-x64 win7-x64 osx.10.11-x64 ubuntu.16.04-x64 ubuntu.18.04-x64 debian.8-x64
 
-DOCKER_REPO_VERSION = 1.1.10-runtime-deps-stretch
+DOCKER_REPO_VERSION = $(shell cat ../VERSION)
 DOCKER_REPO_NAME 	= guneysu/dotnetcore-imageserver
 DOCKER_REPO 		= $(DOCKER_REPO_NAME):$(DOCKER_REPO_VERSION)
 
@@ -35,7 +35,10 @@ docker-build: ## Builds docker container
 	docker tag $(DOCKER_REPO) $(ECS_REPO)
 
 
-.PHONY: docker-push
-docker-push: ## Pushs docker container to docker hub
+.PHONY: dockerhub-push
+dockerhub-push: docker-build ## Pushs docker container to docker hub
 	docker push $(DOCKER_REPO)
+
+.PHONY: ecs-push
+ecs-push: docker-build ## Pushs docker container to ECS Repository
 	docker push $(ECS_REPO)
