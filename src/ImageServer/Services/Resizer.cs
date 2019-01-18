@@ -27,7 +27,7 @@ namespace ImageServer.Services
             var ext = Path.GetExtension(name);
             switch (ext){
                 case ".png":
-                    return new PngEncoder(); 
+                    return new PngEncoder();          
                 case ".jpg":
                 default:
                     return new JpegEncoder()

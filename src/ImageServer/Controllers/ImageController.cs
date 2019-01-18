@@ -41,7 +41,7 @@ namespace ImageServer.Controllers
             var ext = Path.GetExtension(name);
             switch (ext){
                 case ".png":
-                    return "image/png";
+                    return "image/png";          
                 case ".jpg":
                 default:
                     return "image/jpeg";
