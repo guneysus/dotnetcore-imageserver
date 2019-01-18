@@ -4,7 +4,7 @@ PROJECT=ImageServer
 PUBLISH = dotnet publish /p:TrimUnusedDependencies=false $(PROJECT)
 DEBUG_FLAGS = -c Debug
 
-RUNTIMES = win10-x64 win81-x64 win8-x64 win7-x64 osx.10.11-x64 ubuntu.16.04-x64 ubuntu.18.04-x64 debian.8-x64
+RUNTIMES = win10-x64 win81-x64 win8-x64 win7-x64 osx.10.11-x64 ubuntu.16.04-x64 debian.8-x64
 
 DOCKER_REPO_VERSION = $(shell cat ../VERSION)
 DOCKER_REPO_NAME 	= guneysu/dotnetcore-imageserver
