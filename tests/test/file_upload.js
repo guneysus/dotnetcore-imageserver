@@ -4,7 +4,6 @@ var should = require('chai').should(),
 	API_URL = 'http://localhost:5000',
 	api = supertest(API_URL);
 
-
 describe("JPEG File Upload", function () {
 	it("single JPEG file upload", function (done) {
 		api.post('/api/upload')
@@ -38,7 +37,6 @@ describe("JPEG  File Upload and Get Original Size", function () {
 			.end(function (err, res) {
 				if (err) return done(err);
 				uploadedfile = res.text;
-				console.log(uploadedfile);
 				done();
 			});
 	});
@@ -91,7 +89,6 @@ describe("PNG File Upload and Get Original Size", function () {
 			.end(function (err, res) {
 				if (err) return done(err);
 				uploadedfile = res.text;
-				console.log(uploadedfile);
 				done();
 			});
 	});
@@ -109,196 +106,72 @@ describe("PNG File Upload and Get Original Size", function () {
 	});
 });
 
-// describe('Account', function () {
+describe("Upload and Replace with custom file name (PUT) file", function () {
+	var uploadedfile;
 
-// 	var users = {
-// 		ahmed: {
-// 			username: 'ahmed',
-// 			password: 123
-// 		},
-// 		mehmet: {
-// 			username: 'mehmet',
-// 			password: 123
-// 		},
-// 		blocked: {
-// 			username: 'blocked',
-// 			password: 123
-// 		}
-// 	}
+	it("single PNG file upload", function (done) {
+		api.put('/api/upload/' + 'foobar.png')
+			.set('Content-Type', 'multipart/form-data')
+			.attach('image', '_data/sample.png')
+			.expect(200)
+			.expect('Content-Type', /text\/plain/)
+			.expect(/foobar\.png/)
+			.end(function (err, res) {
+				if (err) {
+					return done(err);
+				}
+				uploadedfile = res.text;
+				done();
+			});
+	});
 
-// 	before(function (done) {
-// 		api.post('/api/account/register')
-// 			.send(users.ahmed)
-// 			.set('Accept', 'application/json')
-// 			//.expect(200)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
 
-// 	before(function (done) {
-// 		api.post('/api/account/register')
-// 			.send(users.mehmet)
-// 			.set('Accept', 'application/json')
-// 			//.expect(200)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
+	it("single PNG file replace", function (done) {
+		api.put('/api/upload/' + 'foobar.png')
+			.set('Content-Type', 'multipart/form-data')
+			.attach('image', '_data/ZY-IMG_0091-635px.jpg')
+			.expect(200)
+			.expect('Content-Type', /text\/plain/)
+			.expect(/foobar\.png/)
+			.end(function (err, res) {
+				if (err) {
+					return done(err);
+				}
+				uploadedfile = res.text;
+				done();
+			});
+	});
+})
 
-// 	before(function (done) {
-// 		api.post('/api/account/register')
-// 			.send(users.blocked)
-// 			.set('Accept', 'application/json')
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
+describe("delete file", function () {
+	var uploadedfile;
+	before(function (done) {
 
-// 	it('should ahmed login and response contains JWT token', function (done) {
+		api.put('/api/upload/' + 'foobar.jpg')
+			.set('Content-Type', 'multipart/form-data')
+			.attach('image', '_data/ZY-IMG_0091-635px.jpg')
+			.expect(200)
+			.expect('Content-Type', /text\/plain/)
+			.expect(/jpg/)
+			.end(function (err, res) {
+				if (err) return done(err);
+				uploadedfile = res.text;
+				done();
+			});
+	});
 
-// 		api.post('/api/account/login')
-// 			.send(users.ahmed)
-// 			.set('Accept', 'application/json')
-// 			.expect(200)
-// 			.expect('Content-Type', /json/)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				users.ahmed.token = res.body;
-// 				done();
-// 			});
-// 	});
+	it("delete file", function (done) {
+		api.delete('/api/upload/' + 'foobar.jpg')
+			.expect(200)
+			.expect('Content-Type', /text\/plain/)
+			.expect(/foobar\.jpg/)
+			.end(function (err, res) {
+				if (err) {
+					return done(err);
+				}
+				uploadedfile = res.text;
 
-// 	it('should mehmet login and response contains JWT token', function (done) {
-
-// 		api.post('/api/account/login')
-// 			.send(users.mehmet)
-// 			.set('Accept', 'application/json')
-// 			.expect(200)
-// 			.expect('Content-Type', /json/)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				users.mehmet.token = res.body;
-// 				done();
-// 			});
-// 	});
-
-// 	it('should blocked login and response contains JWT token', function (done) {
-
-// 		api.post('/api/account/login')
-// 			.send(users.blocked)
-// 			.set('Accept', 'application/json')
-// 			.expect(200)
-// 			.expect('Content-Type', /json/)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				users.blocked.token = res.body;
-// 				done();
-// 			});
-// 	});
-
-// 	it('should ahmed account info contains ahmed', function (done) {
-
-// 		api.post('/api/account/info')
-// 			.set('Authorization', 'Bearer ' + users.ahmed.token)
-// 			.expect(200)
-// 			.expect('Content-Type', /text/)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
-
-// 	it('should mehmet account info contains ahmed', function (done) {
-
-// 		api.post('/api/account/info')
-// 			.set('Authorization', 'Bearer ' + users.mehmet.token)
-// 			.expect(200)
-// 			.expect('Content-Type', /text/)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
-
-// 	it('ahmed should not send an not existing user', function (done) {
-// 		api.post('/api/message/send')
-// 			.send({ to: 'non_existing_user', body: "Message" })
-// 			.set('Authorization', 'Bearer ' + users.ahmed.token)
-// 			.expect(500)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
-
-// 	it('ahmed should send to mehmet', function (done) {
-// 		api.post('/api/message/send')
-// 			.send({ to: 'mehmet', body: "Merhaba Mehmet" })
-// 			.set('Authorization', 'Bearer ' + users.ahmed.token)
-// 			.expect(200)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
-
-// 	it('mehmet should send to ahmed', function (done) {
-// 		api.post('/api/message/send')
-// 			.send({ to: 'ahmed', body: "Merhaba Ahmed" })
-// 			.set('Authorization', 'Bearer ' + users.mehmet.token)
-// 			.expect(200)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
-
-// 	it('ahmed should get conversation with mehmet', function (done) {
-// 		api.post('/api/message/getconversation')
-// 			.send({ with: 'mehmet' })
-// 			.set('Authorization', 'Bearer ' + users.ahmed.token)
-// 			.expect(200)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
-
-// 	it('mehmet should get conversation with ahmed', function (done) {
-// 		api.post('/api/message/getconversation')
-// 			.send({ with: 'ahmed' })
-// 			.set('Accept', 'application/json')
-// 			.set('Authorization', 'Bearer ' + users.mehmet.token)
-// 			.expect(200)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
-
-// 	it('ahmed should block the user: blocked', function (done) {
-// 		api.post('/api/account/block')
-// 			.send({ username: 'blocked' })
-// 			.set('Authorization', 'Bearer ' + users.ahmed.token)
-// 			.expect(200)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
-
-// 	it("blocked user should NOT send message to ahmed :')   ", function (done) {
-// 		api.post('/api/message/send')
-// 			.send({ to: 'ahmed', body: "Merhaba Ahmed" })
-// 			.set('Authorization', 'Bearer ' + users.blocked.token)
-// 			.expect(500)
-// 			.end(function (err, res) {
-// 				if (err) return done(err);
-// 				done();
-// 			});
-// 	});
-// });
+				done();
+			});
+	});
+})
