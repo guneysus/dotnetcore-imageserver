@@ -21,7 +21,7 @@ namespace ImageServer.Controllers
             Stream stream = new MemoryStream();
             _resizer.ResizeFixedHeight(name, height, stream, quality);
 
-            var result = File(stream, contentType: "image/jpeg");
+            var result = File(stream, contentType: contentTypeFactory(name));
             return result;
         }
 
@@ -33,8 +33,19 @@ namespace ImageServer.Controllers
             Stream stream = new MemoryStream();
             _resizer.ResizeFixedWidth(name, width, stream, quality);
 
-            var result = File(stream, contentType: "image/jpeg");
+            var result = File(stream, contentType: contentTypeFactory(name));
             return result;
+        }
+
+        private string contentTypeFactory(string name){
+            var ext = Path.GetExtension(name);
+            switch (ext){
+                case ".png":
+                    return "image/png";
+                case ".jpg":
+                default:
+                    return "image/jpeg";
+            }
         }
 
     }

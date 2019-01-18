@@ -1,6 +1,8 @@
 version: '3'
 services:
   imageserver:
-    build: .
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
     ports:
      - "5000:5000"

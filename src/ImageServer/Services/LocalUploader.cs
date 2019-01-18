@@ -74,7 +74,7 @@ namespace ImageServer.Services
 
         private static async Task CopyTo(IFormFile image, string fullpath)
         {
-            using (var stream = new FileStream(fullpath, FileMode.Create))
+            using (var stream = new FileStream(fullpath, FileMode.OpenOrCreate))
                 await image.CopyToAsync(stream);
         }
 
@@ -86,6 +86,24 @@ namespace ImageServer.Services
         private static string GetFilename(IFormFile image)
         {
             return (Guid.NewGuid().ToString() + Path.GetExtension(image.FileName)).ToLower();
+        }
+
+        async Task<string> IUploader.Replace(string name, IFormFile image)
+        {
+            ValidateOrThrowException(image);
+
+            var fullpath = GetFullpath(name);
+
+            await CopyTo(image, fullpath);
+
+            return name;
+        }
+
+        Task<string> IUploader.Delete(string name)
+        {
+            var fullpath = GetFullpath(name);
+            File.Delete(fullpath);
+            return Task.FromResult(name);
         }
     }
 }

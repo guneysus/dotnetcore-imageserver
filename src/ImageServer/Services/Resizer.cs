@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Transforms;
 using System;
@@ -12,8 +13,6 @@ namespace ImageServer.Services
 {
     public class Resizer : IResizer
     {
-        private readonly IImageEncoder _defaultEncoder;
-
         private readonly IHostingEnvironment _hosting;
         private readonly IUploader _uploader;
 
@@ -21,19 +20,23 @@ namespace ImageServer.Services
         {
             _hosting = hosting;
             _uploader = uploader;
-
-            this._defaultEncoder = EncoderFactory(95);
         }
 
-
-        private IImageEncoder EncoderFactory(int quality)
+        private IImageEncoder EncoderFactory(string name, int quality)
         {
-            return new JpegEncoder()
-            {
-                Quality = quality,
-                Subsample = JpegSubsample.Ratio444,
-                IgnoreMetadata = true
-            };
+            var ext = Path.GetExtension(name);
+            switch (ext){
+                case ".png":
+                    return new PngEncoder(); 
+                case ".jpg":
+                default:
+                    return new JpegEncoder()
+                    {
+                        Quality = quality,
+                        Subsample = JpegSubsample.Ratio444,
+                        IgnoreMetadata = true
+                    }; 
+            }
         }
 
         void IResizer.ResizeFixedHeight(string name, int height, Stream stream, int quality)
@@ -53,7 +56,7 @@ namespace ImageServer.Services
                     image.Mutate(x => x.Resize(width, height));
                 }
 
-                image.Save(stream, encoder: EncoderFactory(quality));
+                image.Save(stream, encoder: EncoderFactory(name, quality));
                 stream.Position = 0;
             }
         }
@@ -75,7 +78,7 @@ namespace ImageServer.Services
                     image.Mutate(x => x.Resize(width, height));
                 }
 
-                image.Save(stream, encoder: EncoderFactory(quality));
+                image.Save(stream, encoder: EncoderFactory(name, quality));
                 stream.Position = 0;
             }
         }
