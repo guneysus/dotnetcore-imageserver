@@ -1,7 +1,7 @@
 var should = require('chai').should(),
 	expect = require('chai').expect,
 	supertest = require('supertest'),
-	API_URL = 'http://localhost:5000',
+	API_URL = 'http://app:5000',
 	api = supertest(API_URL);
 
 describe("JPEG File Upload", function () {
@@ -171,6 +171,22 @@ describe("delete file", function () {
 				}
 				uploadedfile = res.text;
 
+				done();
+			});
+	});
+})
+
+
+
+
+describe("return 404 for non existing images", function () {
+	it("404", function (done) {
+		api.get('/image/h0/' + 'foobar.jpg')
+			.expect(404)
+			.end(function (err, res) {
+				if (err) {
+					return done(err);
+				}
 				done();
 			});
 	});

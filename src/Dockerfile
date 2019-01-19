@@ -14,7 +14,7 @@ RUN dotnet publish -c Debug --runtime debian.8-x64 -o out
 FROM microsoft/dotnet:1.1-runtime-jessie
 
 # ADD ImageServer/bin/Debug/netcoreapp1.1/debian.8-x64/publish/ app
-COPY --from=build-env /app/out .
+COPY --from=build-env /app/out /app
 
 WORKDIR /app
 ENV ASPNETCORE_ENVIRONMENT Development
