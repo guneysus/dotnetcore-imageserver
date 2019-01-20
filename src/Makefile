@@ -37,7 +37,7 @@ down:	## Stop project with docker compose
 docker-build: ## Builds docker container
 	docker build -t $(DOCKER_REPO) .
 	docker tag $(DOCKER_REPO) $(ECS_REPO)
-
+	docker tag $(DOCKER_REPO) $(DOCKER_REPO_NAME):latest
 
 .PHONY: dockerhub-push
 dockerhub-push: docker-build ## Pushs docker container to docker hub
