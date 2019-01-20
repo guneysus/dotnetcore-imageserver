@@ -1,19 +1,6 @@
 version: 0.2
 
-#env:
-  #variables:
-     # key: "value"
-     # key: "value"
-  #parameter-store:
-     # key: "value"
-     # key: "value"
-
 phases:
-  #install:
-    #commands:
-      # - command
-      # - command
-  
   pre_build:
     commands:
     - echo Logging in to Amazon ECR....
@@ -36,11 +23,3 @@ phases:
     - docker push $ECS_REPO_NAME:latest
     - docker push $ECS_REPO
 
-#artifacts:
-    # - location
-    # - location
-  #discard-paths: yes
-  #base-directory: location
-#cache:
-  #paths:
-    # - paths

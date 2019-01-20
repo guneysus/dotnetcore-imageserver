@@ -8,6 +8,9 @@ services:
       - app
 
   app:
-    image: guneysu/imageserver:latest
+    # image: guneysu/imageserver:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 5000:5000

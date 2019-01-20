@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 PROJECT=ImageServer
 
-PUBLISH = dotnet publish /p:TrimUnusedDependencies=false $(PROJECT)
+PUBLISH = dotnet publish /p:TrimUnusedDependencies=false src/$(PROJECT)
 DEBUG_FLAGS = -c Debug
 
 # win10-x64 win81-x64 win8-x64 win7-x64 osx.10.11-x64 ubuntu.16.04-x64 
