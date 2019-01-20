@@ -19,6 +19,8 @@ COPY --from=build-env /app/out /app
 WORKDIR /app
 ENV ASPNETCORE_ENVIRONMENT Development
 ENV ASPNETCORE_URLS http://+:5000
+
+VOLUME [ "/app/wwwroot" ]
 CMD ["dotnet", "ImageServer.dll"]
 
 

@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
   imageserver:
     build:
@@ -6,7 +6,19 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - app
-
+    volumes:
+      # - type: volume
+      #   source: ./uploads
+      #   target: /app/wwwroot
+        # volume:
+        #   nocopy: true  
+      - type: bind
+        source: ./uploads
+        target: /app/wwwroot
+      # - type: bind
+      #   source: ./uploads
+      #   target: /wwwroot
+      # - ./uploads:/app/wwwroot
   app:
     # image: guneysu/imageserver:latest
     build:
@@ -14,3 +26,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5000:5000
+
+volumes:
+  uploads:

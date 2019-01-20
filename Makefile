@@ -26,11 +26,11 @@ $(RUNTIMES):
 
 .PHONY: up
 up:	publish ## Start project with docker compose
-	docker-compose up --build -d
+	docker-compose up --renew-anon-volumes --build
 
 .PHONY: down
 down:	## Stop project with docker compose
-	docker-compose down
+	docker-compose down --volumes --rmi all
 
 .PHONY: docker-build
 docker-build: ## Builds docker container
