@@ -19,9 +19,9 @@ phases:
     - echo Logging in to Amazon ECR....
     - aws --version
     - $(aws ecr get-login --region us-east-1 --no-include-email)
-    - DOCKER_REPO_VERSION   = 0.0.1
-    - ECS_REPO_NAME         = 023038164406.dkr.ecr.us-east-1.amazonaws.com/dotnetcore-imageserver
-    - ECS_REPO              = $(ECS_REPO_NAME):$(DOCKER_REPO_VERSION)
+    - DOCKER_REPO_VERSION=0.0.1
+    - ECS_REPO_NAME=023038164406.dkr.ecr.us-east-1.amazonaws.com/dotnetcore-imageserver
+    - ECS_REPO=$(ECS_REPO_NAME):$(DOCKER_REPO_VERSION)
   
   build:
     commands:
