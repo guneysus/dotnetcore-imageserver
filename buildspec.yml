@@ -13,24 +13,29 @@ phases:
     #commands:
       # - command
       # - command
+  
   pre_build:
     commands:
     - echo Logging in to Amazon ECR....
     - aws --version
     - $(aws ecr get-login --region us-east-1 --no-include-email)
-    - REPOSITORY_URI=023038164406.dkr.ecr.us-east-1.amazonaws.com/dotnetcore-imageserver
-    - IMAGE_TAG=latest
+    - DOCKER_REPO_VERSION   = 0.0.1
+    - ECS_REPO_NAME         = 023038164406.dkr.ecr.us-east-1.amazonaws.com/dotnetcore-imageserver
+    - ECS_REPO              = $(ECS_REPO_NAME):$(DOCKER_REPO_VERSION)
+  
   build:
     commands:
     - echo Build started on `date`
     - echo Building the Docker image...
-    - cd src
-    - docker build -t $REPOSITORY_URI:latest .
-    - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+    - docker build -t $ECS_REPO_NAME:latest src --file Dockerfile
+    - docker tag $ECS_REPO_NAME:latest $ECS_REPO
+  
   post_build:
     commands:
     - echo Build completed on `date`
-    - docker push $REPOSITORY_URI:$IMAGE_TAG
+    - docker push $ECS_REPO_NAME:latest
+    - docker push $ECS_REPO
+
 #artifacts:
     # - location
     # - location

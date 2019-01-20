@@ -2,12 +2,12 @@ version: '3'
 services:
   imageserver:
     build:
-      context: .
+      context: tests
       dockerfile: Dockerfile
     depends_on:
       - app
 
   app:
-    image: guneysu/dotnetcore-imageserver:0.0.1
+    image: guneysu/imageserver:latest
     ports:
       - 5000:5000

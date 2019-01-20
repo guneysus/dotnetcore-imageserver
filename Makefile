@@ -7,7 +7,7 @@ DEBUG_FLAGS = -c Debug
 # win10-x64 win81-x64 win8-x64 win7-x64 osx.10.11-x64 ubuntu.16.04-x64 
 RUNTIMES = debian.8-x64
 
-DOCKER_REPO_VERSION = $(shell cat ../VERSION)
+DOCKER_REPO_VERSION = $(shell cat VERSION)
 DOCKER_REPO_NAME 	= guneysu/imageserver
 DOCKER_REPO 		= $(DOCKER_REPO_NAME):$(DOCKER_REPO_VERSION)
 
@@ -34,11 +34,7 @@ down:	## Stop project with docker compose
 
 .PHONY: docker-build
 docker-build: ## Builds docker container
-	docker build -t $(DOCKER_REPO) .
-	tag
-
-.PHONY: tag
-tag: ## Builds docker container
+	docker build -t $(DOCKER_REPO) src --file Dockerfile
 	docker tag $(DOCKER_REPO) $(ECS_REPO)
 	docker tag $(DOCKER_REPO) $(DOCKER_REPO_NAME):latest
 
