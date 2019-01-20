@@ -14,7 +14,7 @@ namespace ImageServer.Controllers
             _resizer = resizer;
         }
 
-        [HttpGet("h{height:regex(^(0|160|240|320|480|640|720|768|1024|1200|1600)$)}/{name}")]
+        // [HttpGet("h{height:regex(^(0|160|240|320|480|640|720|768|1024|1200|1600)$)}/{name}")]
         [HttpGet("h{height:int}/{name}")]
         public IActionResult FixedHeight(string name, int height, int quality = 95)
         {
@@ -26,7 +26,7 @@ namespace ImageServer.Controllers
         }
 
 
-        [HttpGet("w{width:regex(^(0|160|240|320|480|640|720|768|1024|1200|1600)$)}/{name}")]
+        // [HttpGet("w{width:regex(^(0|160|240|320|480|640|720|768|1024|1200|1600)$)}/{name}")]
         [HttpGet("w{width:int}/{name}")]
         public IActionResult FixedWidth(string name, int width, int quality = 95)
         {

@@ -25,9 +25,10 @@ namespace ImageServer.Services
         private IImageEncoder EncoderFactory(string name, int quality)
         {
             var ext = Path.GetExtension(name);
-            switch (ext){
+            switch (ext)
+            {
                 case ".png":
-                    return new PngEncoder();          
+                    return new PngEncoder();
                 case ".jpg":
                 default:
                     return new JpegEncoder()
@@ -35,15 +36,23 @@ namespace ImageServer.Services
                         Quality = quality,
                         Subsample = JpegSubsample.Ratio444,
                         IgnoreMetadata = true
-                    }; 
+                    };
             }
         }
 
         void IResizer.ResizeFixedHeight(string name, int height, Stream stream, int quality)
         {
             height = height > 0 ? height : 0;
-
             var originalFileFullpath = Path.Combine(_hosting.WebRootPath, name);
+
+            if (height == 0)
+            {
+                using (var image = Image.Load(originalFileFullpath))
+                {
+                    image.Save(stream, encoder: EncoderFactory(name, quality));
+                    stream.Position = 0;
+                }
+            }
 
             using (var image = Image.Load(originalFileFullpath))
             {
@@ -65,7 +74,16 @@ namespace ImageServer.Services
         {
             width = width > 0 ? width : 0;
 
-            var originalFileFullpath = Path.Combine(_hosting.WebRootPath, name); 
+            var originalFileFullpath = Path.Combine(_hosting.WebRootPath, name);
+
+            if (width == 0)
+            {
+                using (var image = Image.Load(originalFileFullpath))
+                {
+                    image.Save(stream, encoder: EncoderFactory(name, quality));
+                    stream.Position = 0;
+                }
+            }
 
             using (var image = Image.Load(originalFileFullpath))
             {

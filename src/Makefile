@@ -26,9 +26,12 @@ $(RUNTIMES):
 
 .PHONY: up
 up:	publish ## Start project with docker compose
-	docker-compose up --build
+	docker-compose up --build -d
 
 
+.PHONY: down
+down:	## Stop project with docker compose
+	docker-compose down
 
 .PHONY: docker-build
 docker-build: ## Builds docker container
@@ -39,7 +42,9 @@ docker-build: ## Builds docker container
 .PHONY: dockerhub-push
 dockerhub-push: docker-build ## Pushs docker container to docker hub
 	docker push $(DOCKER_REPO)
+	docker push $(DOCKER_REPO_NAME):latest
 
 .PHONY: ecs-push
 ecs-push: docker-build ## Pushs docker container to ECS Repository
 	docker push $(ECS_REPO)
+	docker push $(ECS_REPO_NAME):latest
