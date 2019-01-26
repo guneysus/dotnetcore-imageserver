@@ -11,4 +11,10 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+ENV API_URL ""
+
+RUN wget --no-check-certificate https://github.com/vishnubob/wait-for-it/raw/master/wait-for-it.sh
+RUN chmod +x wait-for-it.sh
+
 CMD [ "node_modules/.bin/mocha", "--timeout", "25000", "--colors", "--reporter", "mocha-jenkins-reporter"]
+

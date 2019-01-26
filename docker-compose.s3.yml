@@ -1,31 +1,17 @@
 version: '3.2'
 services:
-
-  s3:
+  localstack-s3:
     image: localstack/localstack:latest
     # container_name: localstack-s3
     environment:
      - SERVICES=s3:5002
      - DEFAULT_REGION=us-east-1
      - DATA_DIR=/tmp/localstack/data
-     - AWS_ACCESS_KEY_ID=""
-     - AWS_SECRET_KEY=""
     ports:
      - "5002:5002"
      - "9999:8080"
     volumes:
       - localstack-data:/tmp/localstack
 
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 5000:5000
-    depends_on:
-      - s3
-
 volumes:
-  uploads:
   localstack-data:
-    # name: localstack-data  

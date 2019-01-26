@@ -47,3 +47,11 @@ dockerhub-push: docker-build ## Pushs docker container to docker hub
 ecs-push: docker-build ## Pushs docker container to ECS Repository
 	docker push $(ECS_REPO)
 	docker push $(ECS_REPO_NAME):latest
+
+.PHONY: tests
+tests:	## runs end-to-end tests in a supertest (node) container
+	docker-compose  -f docker-compose.tests.yml up --renew-anon-volumes --build
+
+.PHONY: s3-develop
+s3-develop:	## run localstack s3 container for development
+	docker-compose  -f docker-compose.s3.yml up --renew-anon-volumes

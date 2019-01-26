@@ -12,10 +12,12 @@ namespace ImageServer.Services
     internal class LocalUploader : IUploader
     {
         private readonly IHostingEnvironment _hosting;
+        private readonly S3Uploader s3;
 
-        public LocalUploader(IHostingEnvironment hosting)
+        public LocalUploader(IHostingEnvironment hosting, S3Uploader s3)
         {
             _hosting = hosting;
+            this.s3 = s3;
         }
 
         async Task<string> IUploader.Upload(IFormFile image)

@@ -1,0 +1,23 @@
+version: '3.2'
+services:
+  tests:
+    build:
+      context: tests
+      dockerfile: Dockerfile
+    depends_on:
+      - app
+    command: ["./wait-for-it.sh", "app:5000", "--timeout=10" , "--", "node_modules/.bin/mocha", "--timeout", "25000", "--colors", "--reporter", "mocha-jenkins-reporter", "--full-trace", "--retries", "3"]      
+    # command: ["bash", "-c", "export"]
+    volumes:
+      - type: bind
+        source: ./uploads
+        target: /app/wwwroot
+    environment:
+      - API_URL=http://app:5000
+  app:
+    image: guneysu/imageserver:latest
+    ports:
+      - 5000:5000
+
+volumes:
+  uploads:

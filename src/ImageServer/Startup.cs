@@ -36,6 +36,7 @@ namespace ImageServer
             SixLabors.ImageSharp.Configuration.Default.MemoryManager = SixLabors.ImageSharp.Memory.ArrayPoolMemoryManager.CreateWithMinimalPooling();
 
             services.AddTransient<IUploader, LocalUploader>();
+            services.AddTransient<S3Uploader>();
             services.AddTransient<IResizer, Resizer>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents

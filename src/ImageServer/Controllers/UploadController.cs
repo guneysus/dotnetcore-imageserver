@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using ImageServer.Contracts;
 using System.Collections.Generic;
+using ImageServer.Services;
 
 namespace ImageServer.Controllers
 {
@@ -10,16 +11,19 @@ namespace ImageServer.Controllers
     public class UploadController : Controller
     {
         private readonly IUploader _uploader;
+        private readonly IUploader _s3;
 
-        public UploadController(IUploader uploader)
+        public UploadController(IUploader uploader, S3Uploader s3)
         {
             _uploader = uploader;
+            _s3 = s3;
         }
 
         [HttpPost]
         public async Task<string> Upload(IFormFile image)
         {
             var result = await _uploader.Upload(image);
+            var s3key = await _s3.Upload(image);
             return result;
         }
 
