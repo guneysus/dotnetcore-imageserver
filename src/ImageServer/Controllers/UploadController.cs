@@ -23,7 +23,7 @@ namespace ImageServer.Controllers
         public async Task<string> Upload(IFormFile image)
         {
             var result = await _uploader.Upload(image);
-            var s3key = await _s3.Upload(image);
+            // var s3key = await _s3.Upload(image); // TODO
             return result;
         }
 

@@ -26,7 +26,7 @@ $(RUNTIMES):
 
 .PHONY: up
 up:	## Start project with docker compose
-	docker-compose up --renew-anon-volumes --build
+	docker-compose up --renew-anon-volumes --build -d
 
 .PHONY: down
 down:	## Stop project with docker compose
@@ -34,7 +34,7 @@ down:	## Stop project with docker compose
 
 .PHONY: docker-build
 docker-build: ## Builds docker container
-	docker build -t $(DOCKER_REPO) src --file Dockerfile
+	docker build -t $(DOCKER_REPO) . --file Dockerfile
 	docker tag $(DOCKER_REPO) $(ECS_REPO)
 	docker tag $(DOCKER_REPO) $(DOCKER_REPO_NAME):latest
 
@@ -49,9 +49,9 @@ ecs-push: docker-build ## Pushs docker container to ECS Repository
 	docker push $(ECS_REPO_NAME):latest
 
 .PHONY: tests
-tests:	## runs end-to-end tests in a supertest (node) container
-	docker-compose  -f docker-compose.tests.yml up --renew-anon-volumes --build
+tests: docker-build	up ## runs end-to-end tests in a supertest (node) container
+	docker-compose -f docker-compose.tests.yml up --renew-anon-volumes --build
 
 .PHONY: s3-develop
 s3-develop:	## run localstack s3 container for development
-	docker-compose  -f docker-compose.s3.yml up --renew-anon-volumes
+	docker-compose -f docker-compose.s3.yml up --renew-anon-volumes
