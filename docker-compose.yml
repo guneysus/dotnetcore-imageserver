@@ -1,11 +1,14 @@
 version: '3.2'
 services:
-  imageserver:
+  tests:
     build:
       context: tests
       dockerfile: Dockerfile
+    # command: ["bash", "-c" ,"export"]
     depends_on:
       - app
+    environment:
+      - API_URL=http://app:5000
     volumes:
       # - type: volume
       #   source: ./uploads

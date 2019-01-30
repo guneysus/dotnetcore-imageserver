@@ -47,3 +47,8 @@ dockerhub-push: docker-build ## Pushs docker container to docker hub
 ecs-push: docker-build ## Pushs docker container to ECS Repository
 	docker push $(ECS_REPO)
 	docker push $(ECS_REPO_NAME):latest
+
+
+.PHONY: tests
+tests: up		## Runs e2e tests
+	API_URL=http://localhost:5000 npm run test --prefix tests/

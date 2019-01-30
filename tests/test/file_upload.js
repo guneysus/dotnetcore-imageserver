@@ -1,7 +1,7 @@
 var should = require('chai').should(),
 	expect = require('chai').expect,
 	supertest = require('supertest'),
-	API_URL = 'http://app:5000',
+	API_URL = process.env.API_URL,
 	api = supertest(API_URL);
 
 describe("JPEG File Upload", function () {

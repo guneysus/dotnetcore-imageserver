@@ -11,4 +11,6 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+ENV API_URL=""
+
 CMD [ "node_modules/.bin/mocha", "--timeout", "25000", "--colors", "--reporter", "mocha-jenkins-reporter"]
