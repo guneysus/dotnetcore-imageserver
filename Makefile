@@ -25,7 +25,7 @@ $(RUNTIMES):
 	$(PUBLISH) $(DEBUG_FLAGS) --runtime $@
 
 .PHONY: up
-up:	publish ## Start project with docker compose
+up:	## Start project with docker compose
 	docker-compose up --renew-anon-volumes --build
 
 .PHONY: down

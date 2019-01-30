@@ -40,6 +40,18 @@ namespace ImageServer.Services
             }
         }
 
+        bool IResizer.IsExists(string name)
+        {
+            var originalFileFullpath = Path.Combine(_hosting.WebRootPath, name);
+
+            if (!File.Exists(originalFileFullpath))
+            {
+                throw new FileNotFoundException("File not found", originalFileFullpath);
+            }
+
+            return true;
+        }
+
         void IResizer.ResizeFixedHeight(string name, int height, Stream stream, int quality)
         {
             height = height > 0 ? height : 0;
