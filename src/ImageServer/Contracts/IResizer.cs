@@ -6,5 +6,6 @@ namespace ImageServer.Contracts
     {
         void ResizeFixedHeight(string name, int height, Stream stream, int quality);
         void ResizeFixedWidth(string name, int width, Stream stream, int quality);
+        bool IsExists(string name);
     }
 }

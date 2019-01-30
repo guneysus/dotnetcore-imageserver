@@ -19,7 +19,16 @@ namespace ImageServer.Controllers
         public IActionResult FixedHeight(string name, int height, int quality = 95)
         {
             Stream stream = new MemoryStream();
-            _resizer.ResizeFixedHeight(name, height, stream, quality);
+
+            try
+            {
+                _resizer.ResizeFixedHeight(name, height, stream, quality);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return NotFound();
+                throw ex;
+            }
 
             var result = File(stream, contentType: contentTypeFactory(name));
             return result;
@@ -31,22 +40,31 @@ namespace ImageServer.Controllers
         public IActionResult FixedWidth(string name, int width, int quality = 95)
         {
             Stream stream = new MemoryStream();
-            _resizer.ResizeFixedWidth(name, width, stream, quality);
+            try
+            {
+                _resizer.ResizeFixedWidth(name, width, stream, quality);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return NotFound();
+                throw ex;
+            }
 
             var result = File(stream, contentType: contentTypeFactory(name));
             return result;
         }
 
-        private string contentTypeFactory(string name){
+        private string contentTypeFactory(string name)
+        {
             var ext = Path.GetExtension(name);
-            switch (ext){
+            switch (ext)
+            {
                 case ".png":
-                    return "image/png";          
+                    return "image/png";
                 case ".jpg":
                 default:
                     return "image/jpeg";
             }
         }
-
     }
 }
